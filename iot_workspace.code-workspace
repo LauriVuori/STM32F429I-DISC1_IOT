@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "STM32F429I-DISC1_IOT",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"os.h": "c",
+			"cpu_core.h": "c",
+			"os_cpu.h": "c",
+			"os_type.h": "c"
+		}
+	}
+}
