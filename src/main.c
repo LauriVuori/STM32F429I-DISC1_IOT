@@ -19,6 +19,7 @@
 
 #define APP_TASK_START_STK_SIZE 128u
 #define APP_TASK_START_PRIO 1u
+#define LCD_TASK_PRIO 2u
 #define UART_TRANSMIT_TASK_PRIO 12u
 
 
@@ -48,6 +49,11 @@ int main(void) {
     OS_ERR err;
     OSInit(&err);
 
+    OSSemCreate((OS_SEM *)&LcdUpdateSem,
+            (CPU_CHAR *)"Lcd Update Semaphore",
+            (OS_SEM_CTR)0,
+            (OS_ERR *)&err);
+
     OSTaskCreate((OS_TCB *)&AppTaskStartTCB,
                  (CPU_CHAR *)"App Task Start",
                  (OS_TASK_PTR)AppTaskStart,
@@ -74,11 +80,12 @@ static void AppTaskStart(void *p_arg) {
 
     HAL_Init();
     SystemClock_Config();
+
+    LCD_Init();
     BSP_LED_Init(LED3);
     BSP_LED_Init(LED4);
     MX_USART1_UART_Init();
-    LCD_Init();
-    BSP_LCD_DisplayStringAtLine(1, (uint8_t *)"LCD_Init Done");
+
 
     OSTaskCreate((OS_TCB *)&UartTransmitTaskTCB,
                  (CPU_CHAR *)"Uart Transmit Task",
@@ -93,6 +100,21 @@ static void AppTaskStart(void *p_arg) {
                  (void *)0,
                  (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR *)&err);
+
+
+    OSTaskCreate((OS_TCB *)&LcdTaskTCB,
+            (CPU_CHAR *)"LCD Task",
+            (OS_TASK_PTR)LcdTask,
+            (void *)0,
+            (OS_PRIO)LCD_TASK_PRIO,
+            (CPU_STK *)&LcdTaskStk[0],
+            (CPU_STK_SIZE)LCD_TASK_STK_SIZE / 10,
+            (CPU_STK_SIZE)LCD_TASK_STK_SIZE,
+            (OS_MSG_QTY)5u,
+            (OS_TICK)0u,
+            (void *)0,
+            (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+            (OS_ERR *)&err);
 }
 
 /*
