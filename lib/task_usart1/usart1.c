@@ -78,7 +78,9 @@ void UartTransmitTask(void *p_arg) {
         HAL_UART_Receive_IT(&huart1, rxData, MAX_SIZE);  //Make ready for next interrupt
         // BSP_LED_Toggle(LED4); // DEBUG LED
         // BSP_LCD_DisplayStringAtLine(2, (uint8_t *)txData);
-        LCD_DEBUG(txData);
+        OSSemPost((OS_SEM *)&LcdUpdateSem,
+                  (OS_OPT)OS_OPT_POST_NONE,
+                  (OS_ERR *)&err);
     }
 }
 
@@ -109,9 +111,8 @@ void MX_USART1_UART_Init(void)
     huart1.Init.Mode = UART_MODE_TX_RX;
     huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-    if (HAL_UART_Init(&huart1) == HAL_OK)
-    {
-        BSP_LED_On(LED3);
+    if (HAL_UART_Init(&huart1) == HAL_OK) {
+        BSP_LCD_DisplayStringAtLine(3, (uint8_t *)"UART1 Done");
     }
 }
 

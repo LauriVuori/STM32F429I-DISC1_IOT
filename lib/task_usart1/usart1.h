@@ -35,12 +35,13 @@ extern OS_TCB UartTransmitTaskTCB;
 extern CPU_STK UartTransmitTaskStk[UART_TASK_STK_SIZE];
 
 /* Global structures */
-
+/*-------------------------------------------------------------------*
+*    TASK PROTOTYPES                                                 *
+*--------------------------------------------------------------------*/
+void UartTransmitTask(void *p_arg);
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
-
-void UartTransmitTask(void *p_arg);
 void MX_USART1_UART_Init(void);
 void USART1_IRQHandler(void);
 
