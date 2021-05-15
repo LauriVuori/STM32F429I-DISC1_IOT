@@ -29,10 +29,23 @@
 #define MAX_COLUMNS 14u
 #define MAX_ROWS 12
 
+#define LCD_TASK_STK_SIZE 128u
+#define MAX_SIZE 65535u
+
+
+/* Global variables */
+extern OS_TCB LcdTaskTCB;
+extern CPU_STK LcdTaskStk[LCD_TASK_STK_SIZE];
+extern OS_SEM LcdUpdateSem;
+
+
 /* Global variables */
 
 /* Global structures */
-
+/*-------------------------------------------------------------------*
+*    TASK PROTOTYPES                                                 *
+*--------------------------------------------------------------------*/
+void LcdTask(void *p_arg); 
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
