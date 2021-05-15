@@ -18,6 +18,8 @@
 *--------------------------------------------------------------------*/
 
 #include "usart1.h"
+#include "lcd.h"
+#include "stm32f429i_discovery_lcd.h"
 
 /*-------------------------------------------------------------------*
 *    GLOBAL VARIABLES AND CONSTANTS                                  *
@@ -50,14 +52,13 @@ CPU_INT16U rxLen;
 /*********************************************************************
 	M A I N  T A S K     D E S C R I P T I O N
 ---------------------------------------------------------------------
- NAME: UartTransmitTask
- DESCRIPTION:
-	Input:
-	Output:
-  Used global variables:
-  Used global constants:
- REMARKS when using this function:
-*********************************************************************/
+/**
+ * @fn void UartTransmitTask(void *p_arg)
+ * @brief 
+ * @param 
+ * @return 
+ */
+/*********************************************************************/
 void UartTransmitTask(void *p_arg) {
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE); //Enable UART IDLE Interrupt
     HAL_UART_Receive_IT(&huart1, rxData, MAX_SIZE);
@@ -75,7 +76,9 @@ void UartTransmitTask(void *p_arg) {
 
         HAL_UART_Transmit_IT(&huart1, txData, msg_size); //Transmit back
         HAL_UART_Receive_IT(&huart1, rxData, MAX_SIZE);  //Make ready for next interrupt
-        BSP_LED_Toggle(LED4);
+        // BSP_LED_Toggle(LED4); // DEBUG LED
+        // BSP_LCD_DisplayStringAtLine(2, (uint8_t *)txData);
+        LCD_DEBUG(txData);
     }
 }
 

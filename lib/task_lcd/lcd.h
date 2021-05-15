@@ -17,13 +17,17 @@
 /*-------------------------------------------------------------------*
 *    HEADER FILES                                                    *
 *--------------------------------------------------------------------*/
-
+#include "stm32f429i_discovery_lcd.h"
+#include "stm32f4xx_hal.h"
+#include "os.h"
 /*-------------------------------------------------------------------*
 *    GLOBAL VARIABLES AND CONSTANTS                                  *
 *--------------------------------------------------------------------*/
 /* Control flags */
 
 /* Global constants */
+#define MAX_COLUMNS 14u
+#define MAX_ROWS 12
 
 /* Global variables */
 
@@ -32,7 +36,8 @@
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
-
+void LCD_Init(void);
+void LCD_DEBUG(uint8_t * str);
 #endif /* LCD_H */
 
 /*** end of file ***/

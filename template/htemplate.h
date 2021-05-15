@@ -37,3 +37,11 @@
 
 /*** end of file ***/
 
+// /*!
+//     @struct cell
+//     @brief Structure to hold current and future tables
+//     @param current current table
+//     @param future future table
+//     @param generation adds generations every cycle
+// */ 
+
