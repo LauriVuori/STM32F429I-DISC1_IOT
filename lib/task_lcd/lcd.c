@@ -52,19 +52,27 @@ OS_SEM LcdUpdateSem;
 void LcdTask(void *p_arg) {
     OS_ERR err;
     CPU_TS ts;
+
+    // for uart1 message
+    CPU_INT08U *txData;
+    OS_MSG_SIZE msg_size;
     
     // BSP_LCD_Clear(LCD_COLOR_BLACK);
     HAL_Delay(1500);
     BSP_LCD_Clear(LCD_COLOR_WHITE);
     while (DEF_TRUE) {
-        OSSemPend((OS_SEM *)&LcdUpdateSem,
-                  (OS_TICK)0,
-                  (OS_OPT)OS_OPT_PEND_BLOCKING,
-                  (CPU_TS *)&ts,
-                  (OS_ERR *)&err);
-        LCD_DEBUG((uint8_t *)"test");
-        HAL_Delay(1000);
+        // OSSemPend((OS_SEM *)&LcdUpdateSem,
+        //           (OS_TICK)0,
+        //           (OS_OPT)OS_OPT_PEND_BLOCKING,
+        //           (CPU_TS *)&ts,
+        //           (OS_ERR *)&err);
+        txData = OSTaskQPend((OS_TICK)0, //Wait for messages from UART1 task
+                        (OS_OPT)OS_OPT_PEND_BLOCKING,
+                        (OS_MSG_SIZE *)&msg_size,
+                        (CPU_TS *)&ts,
+                        (OS_ERR *)&err);
         BSP_LCD_Clear(LCD_COLOR_WHITE);
+        LCD_DEBUG(txData);
     }
 }
 
