@@ -76,11 +76,17 @@ void UartTransmitTask(void *p_arg) {
 
         HAL_UART_Transmit_IT(&huart1, txData, msg_size); //Transmit back
         HAL_UART_Receive_IT(&huart1, rxData, MAX_SIZE);  //Make ready for next interrupt
-        // BSP_LED_Toggle(LED4); // DEBUG LED
-        // BSP_LCD_DisplayStringAtLine(2, (uint8_t *)txData);
-        OSSemPost((OS_SEM *)&LcdUpdateSem,
-                  (OS_OPT)OS_OPT_POST_NONE,
-                  (OS_ERR *)&err);
+
+
+        // OSSemPost((OS_SEM *)&LcdUpdateSem,
+        //           (OS_OPT)OS_OPT_POST_NONE,
+        //           (OS_ERR *)&err);
+        OSTaskQPost((OS_TCB *)&LcdTaskTCB,
+                    (void *)txData,
+                    (OS_MSG_SIZE)rxLen,
+                    (OS_OPT)OS_OPT_POST_FIFO,
+                    (OS_ERR *)&err);
+        HAL_Delay(1);
     }
 }
 
