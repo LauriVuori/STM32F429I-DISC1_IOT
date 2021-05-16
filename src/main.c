@@ -49,10 +49,10 @@ int main(void) {
     OS_ERR err;
     OSInit(&err);
 
-    OSSemCreate((OS_SEM *)&LcdUpdateSem,
-            (CPU_CHAR *)"Lcd Update Semaphore",
-            (OS_SEM_CTR)0,
-            (OS_ERR *)&err);
+    // OSSemCreate((OS_SEM *)&LcdUpdateSem,
+    //         (CPU_CHAR *)"Lcd Update Semaphore",
+    //         (OS_SEM_CTR)0,
+    //         (OS_ERR *)&err);
 
     OSTaskCreate((OS_TCB *)&AppTaskStartTCB,
                  (CPU_CHAR *)"App Task Start",
