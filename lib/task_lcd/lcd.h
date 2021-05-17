@@ -36,7 +36,9 @@
 /* Global variables */
 extern OS_TCB LcdTaskTCB;
 extern CPU_STK LcdTaskStk[LCD_TASK_STK_SIZE];
-extern OS_SEM LcdUpdateSem;
+extern OS_TCB LcdDebugTaskTCB;
+extern CPU_STK LcdDebugTaskStk[LCD_TASK_STK_SIZE];
+extern OS_SEM LcdDebugUpdateSem;
 
 
 /* Global variables */
@@ -46,6 +48,8 @@ extern OS_SEM LcdUpdateSem;
 *    TASK PROTOTYPES                                                 *
 *--------------------------------------------------------------------*/
 void LcdTask(void *p_arg); 
+
+void LcdDebugTask(void *p_arg); 
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
