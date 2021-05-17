@@ -5,6 +5,7 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_lcd.h"
+#include "stm32f4xx_hal_gpio.h"
 #include "os.h"
 
 /**********************************************************************************************************
@@ -12,6 +13,7 @@
 **********************************************************************************************************/
 #include "usart1.h"
 #include "lcd.h"
+#include "gpio.h"
 
 /**********************************************************************************************************
 *                                            LOCAL DEFINES
@@ -20,7 +22,8 @@
 #define APP_TASK_START_STK_SIZE 128u
 #define APP_TASK_START_PRIO 1u
 #define LCD_TASK_PRIO 2u
-#define UART_TRANSMIT_TASK_PRIO 12u
+#define LCD_DEBUG_TASK_PRIO 12u
+#define UART_TRANSMIT_TASK_PRIO 3u
 
 
 /**********************************************************************************************************
@@ -37,8 +40,11 @@ static CPU_STK AppTaskStartStk[APP_TASK_START_STK_SIZE];
 
 static void AppTaskStart(void *p_arg);
 // void UartTransmitTask(void *p_arg);
-void SystemClock_Config(void);
+static void SystemClock_Config(void);
 void LCD_Init(void);
+// void MX_GPIO_Init();
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
+
 
 
 /**********************************************************************************************************
@@ -67,7 +73,6 @@ int main(void) {
                  (void *)0,
                  (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR *)&err);
-
     OSStart(&err);
 }
 
@@ -82,10 +87,12 @@ static void AppTaskStart(void *p_arg) {
     SystemClock_Config();
 
     LCD_Init();
-    BSP_LED_Init(LED3);
-    BSP_LED_Init(LED4);
+    
     MX_USART1_UART_Init();
 
+    MX_GPIO_Init();
+    BSP_LED_Init(LED3);
+    BSP_LED_Init(LED4);
 
     OSTaskCreate((OS_TCB *)&UartTransmitTaskTCB,
                  (CPU_CHAR *)"Uart Transmit Task",
@@ -115,6 +122,20 @@ static void AppTaskStart(void *p_arg) {
             (void *)0,
             (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
             (OS_ERR *)&err);
+
+    OSTaskCreate((OS_TCB *)&LcdDebugTaskTCB,
+        (CPU_CHAR *)"LCD Debug Task",
+        (OS_TASK_PTR)LcdDebugTask,
+        (void *)0,
+        (OS_PRIO)LCD_TASK_PRIO,
+        (CPU_STK *)&LcdDebugTaskStk[0],
+        (CPU_STK_SIZE)LCD_TASK_STK_SIZE / 10,
+        (CPU_STK_SIZE)LCD_TASK_STK_SIZE,
+        (OS_MSG_QTY)5u,
+        (OS_TICK)0u,
+        (void *)0,
+        (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+        (OS_ERR *)&err);
 }
 
 /*
@@ -124,12 +145,21 @@ static void AppTaskStart(void *p_arg) {
 */
 
 
-
 /*
 *********************************************************************************************************
 *                                      NON-TASK FUNCTIONS
 *********************************************************************************************************
 */
+void EXTI0_IRQHandler(void){
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin ==  GPIO_PIN_0) {
+        BSP_LED_Toggle(LED3);
+    }
+}
+
 
 void HAL_Delay(uint32_t Delay) {
     OS_ERR err;
@@ -176,3 +206,14 @@ void SystemClock_Config(void) {
     PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
     HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct);
 }
+
+/**********************************************************************************************************
+*                                              CODE SNIPPETS
+**********************************************************************************************************/
+/**********************************************************************************************************
+Read gpio pin state
+if (HAL_GPIO_ReadPin (GPIOA, GPIO_PIN_0)) {
+    // Set The LED ON!
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
+}
+***********************************************************************************************************/
