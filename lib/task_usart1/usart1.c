@@ -81,7 +81,7 @@ void UartTransmitTask(void *p_arg) {
         // OSSemPost((OS_SEM *)&LcdUpdateSem,
         //           (OS_OPT)OS_OPT_POST_NONE,
         //           (OS_ERR *)&err);
-        OSTaskQPost((OS_TCB *)&LcdTaskTCB,
+        OSTaskQPost((OS_TCB *)&LcdDebugTaskTCB,
                     (void *)txData,
                     (OS_MSG_SIZE)rxLen,
                     (OS_OPT)OS_OPT_POST_FIFO,
@@ -170,16 +170,14 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
   Used global constants:
  REMARKS when using this function:
 *********************************************************************/
-void USART1_IRQHandler(void)
-{
+void USART1_IRQHandler(void) {
     OS_ERR err;
 
     uint32_t isrflags = READ_REG(huart1.Instance->SR);
     uint32_t cr1its = READ_REG(huart1.Instance->CR1);
 
     /* IDLE interrupt detection and handler to achieve unknown size transmission */
-    if (((isrflags & USART_SR_IDLE) != RESET) && ((cr1its & USART_CR1_IDLEIE)))
-    {
+    if (((isrflags & USART_SR_IDLE) != RESET) && ((cr1its & USART_CR1_IDLEIE))) {
         __HAL_UART_CLEAR_IDLEFLAG(&huart1);
         huart1.RxState = HAL_UART_STATE_READY;
 
