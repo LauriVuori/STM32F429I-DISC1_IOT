@@ -10,7 +10,12 @@
 			"os.h": "c",
 			"cpu_core.h": "c",
 			"os_cpu.h": "c",
-			"os_type.h": "c"
+			"os_type.h": "c",
+			"stm32f4xx_hal_gpio.h": "c",
+			"stm32f4xx_hal.h": "c",
+			"stm32f429i_discovery.h": "c",
+			"exti.h": "c",
+			"lcd.h": "c"
 		}
 	}
 }
