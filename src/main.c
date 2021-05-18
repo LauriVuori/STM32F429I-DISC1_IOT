@@ -94,12 +94,12 @@ static void AppTaskStart(void *p_arg) {
     BSP_LED_Init(LED3);
     BSP_LED_Init(LED4);
 
-    OSTaskCreate((OS_TCB *)&UartTransmitTaskTCB,
+    OSTaskCreate((OS_TCB *)&Uart1TransmitTaskTCB,
                  (CPU_CHAR *)"Uart Transmit Task",
                  (OS_TASK_PTR)UartTransmitTask,
                  (void *)0,
                  (OS_PRIO)UART_TRANSMIT_TASK_PRIO,
-                 (CPU_STK *)&UartTransmitTaskStk[0],
+                 (CPU_STK *)&Uart1TransmitTaskStk[0],
                  (CPU_STK_SIZE)UART_TASK_STK_SIZE / 10,
                  (CPU_STK_SIZE)UART_TASK_STK_SIZE,
                  (OS_MSG_QTY)5u,

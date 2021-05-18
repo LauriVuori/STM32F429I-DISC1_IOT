@@ -30,9 +30,9 @@
 
 /* Global variables */
 
-OS_TCB UartTransmitTaskTCB;
+OS_TCB Uart1TransmitTaskTCB;
 
-CPU_STK UartTransmitTaskStk[UART_TASK_STK_SIZE];
+CPU_STK Uart1TransmitTaskStk[UART_TASK_STK_SIZE];
 
 // UART handle Structure definition
 UART_HandleTypeDef huart1;
@@ -181,7 +181,7 @@ void USART1_IRQHandler(void) {
         huart1.RxState = HAL_UART_STATE_READY;
 
         rxLen = MAX_SIZE - huart1.RxXferCount;
-        OSTaskQPost((OS_TCB *)&UartTransmitTaskTCB,
+        OSTaskQPost((OS_TCB *)&Uart1TransmitTaskTCB,
                     (void *)rxData,
                     (OS_MSG_SIZE)rxLen,
                     (OS_OPT)OS_OPT_POST_FIFO,

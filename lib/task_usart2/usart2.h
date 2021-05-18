@@ -1,7 +1,7 @@
 /*********************************************************************
 
  1.  NAME
-     $USART1_H$ 
+     $USART2_H$ 
 
  2.  DESCRIPTION
 
@@ -12,14 +12,12 @@
        Version history:
 
 **********************************************************************/
-#ifndef USART1_H
-#define USART1_H
+#ifndef USART2_H
+#define USART2_H
 /*-------------------------------------------------------------------*
 *    HEADER FILES                                                    *
 *--------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-#include "stm32f429i_discovery.h"
-#include "os.h"
+
 /*-------------------------------------------------------------------*
 *    GLOBAL VARIABLES AND CONSTANTS                                  *
 *--------------------------------------------------------------------*/
@@ -27,29 +25,26 @@
 
 /* Global constants */
 
-#define UART_TASK_STK_SIZE 128u
-#define MAX_SIZE 65535u
-
 /* Global variables */
-extern OS_TCB Uart1TransmitTaskTCB;
-extern CPU_STK Uart1TransmitTaskStk[UART_TASK_STK_SIZE];
 
 /* Global structures */
 /*-------------------------------------------------------------------*
 *    TASK PROTOTYPES                                                 *
 *--------------------------------------------------------------------*/
-void UartTransmitTask(void *p_arg);
+
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
-void MX_USART1_UART_Init(void);
-void USART1_IRQHandler(void);
 
-#endif /* USART1_H */
+#endif /* USART2_H */
 
 /*** end of file ***/
 
-
-
-
+// /*!
+//     @struct cell
+//     @brief Structure to hold current and future tables
+//     @param current current table
+//     @param future future table
+//     @param generation adds generations every cycle
+// */ 
 
