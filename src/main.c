@@ -11,9 +11,11 @@
 /**********************************************************************************************************
 *                                            TASK INCLUDES
 **********************************************************************************************************/
-#include "usart1.h"
+
 #include "lcd.h"
 #include "gpio.h"
+#include "usart1.h"
+#include "usart5.h"
 
 /**********************************************************************************************************
 *                                            LOCAL DEFINES
@@ -23,7 +25,8 @@
 #define APP_TASK_START_PRIO 1u
 #define LCD_TASK_PRIO 2u
 #define LCD_DEBUG_TASK_PRIO 12u
-#define UART_TRANSMIT_TASK_PRIO 3u
+#define UART1_TRANSMIT_TASK_PRIO 3u
+#define UART5_RECEIVE_TASK_PRIO 4u
 
 
 /**********************************************************************************************************
@@ -89,6 +92,7 @@ static void AppTaskStart(void *p_arg) {
     LCD_Init();
     
     MX_USART1_UART_Init();
+    MX_USART5_UART_Init();
 
     MX_GPIO_Init();
     BSP_LED_Init(LED3);
@@ -98,7 +102,7 @@ static void AppTaskStart(void *p_arg) {
                  (CPU_CHAR *)"Uart1 Transmit Task",
                  (OS_TASK_PTR)Uart1TransmitTask,
                  (void *)0,
-                 (OS_PRIO)UART_TRANSMIT_TASK_PRIO,
+                 (OS_PRIO)UART1_TRANSMIT_TASK_PRIO,
                  (CPU_STK *)&Uart1TransmitTaskStk[0],
                  (CPU_STK_SIZE)UART_TASK_STK_SIZE / 10,
                  (CPU_STK_SIZE)UART_TASK_STK_SIZE,
@@ -107,6 +111,20 @@ static void AppTaskStart(void *p_arg) {
                  (void *)0,
                  (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR *)&err);
+
+    OSTaskCreate((OS_TCB *)&Uart5ReceiveTaskTCB,
+                (CPU_CHAR *)"Uart5 Receive task",
+                (OS_TASK_PTR)Uart5ReceiveTask,
+                (void *)0,
+                (OS_PRIO)UART5_RECEIVE_TASK_PRIO,
+                (CPU_STK *)&Uart5ReceiveTaskStk[0],
+                (CPU_STK_SIZE)UART_TASK_STK_SIZE / 10,
+                (CPU_STK_SIZE)UART_TASK_STK_SIZE,
+                (OS_MSG_QTY)5u,
+                (OS_TICK)0u,
+                (void *)0,
+                (OS_OPT)(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+                (OS_ERR *)&err);
 
 
     OSTaskCreate((OS_TCB *)&LcdTaskTCB,
