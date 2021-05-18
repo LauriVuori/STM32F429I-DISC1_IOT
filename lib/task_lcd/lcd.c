@@ -104,9 +104,10 @@ void LcdDebugTask(void *p_arg) {
         if (txData == NULL) {
             BSP_LCD_ClearStringLine(MAX_ROWS);
             BSP_LCD_ClearStringLine(MAX_ROWS-1);
+            BSP_LCD_ClearStringLine(MAX_ROWS-2);
         }
         else {
-            LCD_DEBUG(txData);
+            LCD_DEBUG(txData,(uint8_t *)"LCDDEBUGTASK");
         }
         txData = NULL;
     }
@@ -151,7 +152,8 @@ void LCD_Init(void) {
  * @return 
  */
 /*********************************************************************/
-void LCD_DEBUG(uint8_t *str) {
+void LCD_DEBUG(uint8_t *str, uint8_t *from) {
+    BSP_LCD_DisplayStringAtLine(MAX_ROWS-2, from);
     BSP_LCD_DisplayStringAtLine(MAX_ROWS-1, (uint8_t *)"Debug:");
     BSP_LCD_DisplayStringAtLine(MAX_ROWS, str);
 }

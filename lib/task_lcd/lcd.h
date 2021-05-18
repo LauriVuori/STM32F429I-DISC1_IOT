@@ -54,7 +54,7 @@ void LcdDebugTask(void *p_arg);
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
 void LCD_Init(void);
-void LCD_DEBUG(uint8_t * str);
+void LCD_DEBUG(uint8_t *str, uint8_t *from);
 #endif /* LCD_H */
 
 /*** end of file ***/
