@@ -61,7 +61,7 @@ CPU_INT16U rxLen;
  * @return 
  */
 /*********************************************************************/
-void UartTransmitTask(void *p_arg) {
+void Uart1TransmitTask(void *p_arg) {
     __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE); //Enable UART IDLE Interrupt
     HAL_UART_Receive_IT(&huart1, rxData, MAX_SIZE);
     OS_ERR err;
@@ -109,8 +109,7 @@ void UartTransmitTask(void *p_arg) {
  * @return void
  */
 /*********************************************************************/
-void MX_USART1_UART_Init(void)
-{
+void MX_USART1_UART_Init(void) {
     huart1.Instance = USART1;
     huart1.Init.BaudRate = 115200;
     huart1.Init.WordLength = UART_WORDLENGTH_8B;
