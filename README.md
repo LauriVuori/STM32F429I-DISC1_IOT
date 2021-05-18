@@ -1,1 +1,3 @@
 # STM32F429I-DISC1_IOT
+TODO:
+Change HAL_UART_MspInit UART5 somewhere else
