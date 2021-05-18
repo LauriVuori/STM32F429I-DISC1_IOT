@@ -135,7 +135,7 @@ void MX_USART1_UART_Init(void) {
  */
 /*********************************************************************/
 void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitTypeDef GPIO_InitStruct[2] = {0};
     if (huart->Instance == USART1) {
         /* Peripheral clock enable */
         __HAL_RCC_USART1_CLK_ENABLE();
@@ -145,16 +145,48 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
         PA9     ------> USART1_RX
         PA10     ------> USART1_TX 
         */
-        GPIO_InitStruct.Pin = GPIO_PIN_10 | GPIO_PIN_9;
-        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Pull = GPIO_NOPULL;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
-        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+        GPIO_InitStruct[0].Pin = GPIO_PIN_10 | GPIO_PIN_9;
+        GPIO_InitStruct[0].Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct[0].Pull = GPIO_NOPULL;
+        GPIO_InitStruct[0].Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct[0].Alternate = GPIO_AF7_USART1;
+        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct[0]);
 
         /* USART1 interrupt Init */
         HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(USART1_IRQn);
+    }
+
+    if (huart->Instance == UART5) {
+        /* Peripheral clock enable */
+        __HAL_RCC_UART5_CLK_ENABLE();
+
+        __HAL_RCC_GPIOD_CLK_ENABLE();
+        __HAL_RCC_GPIOC_CLK_ENABLE();
+        /**USART5 GPIO Configuration    
+        PD2     ------> USART5_RX
+        PC12     ------> USART5_TX 
+        */
+
+        /*Configure GPIO pin : PD2 */
+        GPIO_InitStruct[1].Pin = GPIO_PIN_2;
+        GPIO_InitStruct[1].Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct[1].Pull = GPIO_NOPULL;
+        GPIO_InitStruct[1].Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct[1].Alternate = GPIO_AF8_UART5;
+        HAL_GPIO_Init(GPIOD, &GPIO_InitStruct[1]);
+
+        /*Configure GPIO pin : PC12 */
+        GPIO_InitStruct[1].Pin = GPIO_PIN_12;
+        GPIO_InitStruct[1].Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct[1].Pull = GPIO_NOPULL;
+        GPIO_InitStruct[1].Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct[1].Alternate = GPIO_AF8_UART5;
+        HAL_GPIO_Init(GPIOC, &GPIO_InitStruct[1]);
+
+        /* USART1 interrupt Init */
+        HAL_NVIC_SetPriority(UART5_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(UART5_IRQn);
     }
 }
 
