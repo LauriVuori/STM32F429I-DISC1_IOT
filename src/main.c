@@ -15,7 +15,7 @@
 #include "lcd.h"
 #include "gpio.h"
 #include "usart1.h"
-#include "usart5.h"
+#include "uart5.h"
 
 /**********************************************************************************************************
 *                                            LOCAL DEFINES
