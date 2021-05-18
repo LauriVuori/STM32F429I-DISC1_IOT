@@ -34,6 +34,7 @@ OS_TCB UartTransmitTaskTCB;
 
 CPU_STK UartTransmitTaskStk[UART_TASK_STK_SIZE];
 
+// UART handle Structure definition
 UART_HandleTypeDef huart1;
 
 CPU_INT08U rxData[MAX_SIZE];
@@ -50,12 +51,13 @@ CPU_INT16U rxLen;
 *    MAIN TASK                                                       *
 **********************************************************************/
 /*********************************************************************
-	M A I N  T A S K     D E S C R I P T I O N
----------------------------------------------------------------------
+	T A S K    D E S C R I P T I O N
+----------------------------------------------------------------------*/
 /**
- * @fn void UartTransmitTask(void *p_arg)
- * @brief 
- * @param 
+ * @fn UartTransmitTask(void *p_arg)
+ * @brief Wait message from UART interrupt,
+ * Transmit message back. Post message to LcdDebugTaskTCB
+ * @param void* Data to task
  * @return 
  */
 /*********************************************************************/
@@ -96,17 +98,17 @@ void UartTransmitTask(void *p_arg) {
 *    NON-TASK FUNCTIONS                                              *
 **********************************************************************/
 
+
 /*********************************************************************
 	F U N C T I O N    D E S C R I P T I O N
----------------------------------------------------------------------
- NAME: MX_USART1_UART_Init
- DESCRIPTION: USART1 initialization
-	Input:
-	Output:
-  Used global variables:
-  Used global constants:
- REMARKS when using this function:
-*********************************************************************/
+----------------------------------------------------------------------*/
+/**
+ * @fn MX_USART1_UART_Init
+ * @brief USART1 initialization
+ * @param void
+ * @return void
+ */
+/*********************************************************************/
 void MX_USART1_UART_Init(void)
 {
     huart1.Instance = USART1;
@@ -124,20 +126,18 @@ void MX_USART1_UART_Init(void)
 
 /*********************************************************************
 	F U N C T I O N    D E S C R I P T I O N
----------------------------------------------------------------------
- NAME: HAL_UART_MspInit
- DESCRIPTION: This UART Callback function configures the hardware resources for UART Initialization
-	Input:
-	Output:
-  Used global variables:
-  Used global constants:
- REMARKS when using this function:
-*********************************************************************/
-void HAL_UART_MspInit(UART_HandleTypeDef *huart)
-{
+----------------------------------------------------------------------*/
+/**
+ * @fn HAL_UART_MspInit
+ * @brief This UART Callback function configures
+ *  the hardware resources for UART Initialization
+ * @param UART_HandleTypeDef* UART handle Structure definition 
+ * @return 
+ */
+/*********************************************************************/
+void HAL_UART_MspInit(UART_HandleTypeDef *huart) {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    if (huart->Instance == USART1)
-    {
+    if (huart->Instance == USART1) {
         /* Peripheral clock enable */
         __HAL_RCC_USART1_CLK_ENABLE();
 
@@ -161,15 +161,14 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 
 /*********************************************************************
 	F U N C T I O N    D E S C R I P T I O N
----------------------------------------------------------------------
- NAME: USART1_IRQHandler
- DESCRIPTION: 
-	Input:
-	Output:
-  Used global variables:
-  Used global constants:
- REMARKS when using this function:
-*********************************************************************/
+----------------------------------------------------------------------*/
+/**
+ * @fn USART1_IRQHandler(void)
+ * @brief 
+ * @param void
+ * @return void
+ */
+/*********************************************************************/
 void USART1_IRQHandler(void) {
     OS_ERR err;
 
