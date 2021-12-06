@@ -17,6 +17,7 @@
 *    HEADER FILES                                                    *
 *--------------------------------------------------------------------*/
 #include "lcd.h"
+#include "timer.h"
 /*-------------------------------------------------------------------*
 *    GLOBAL VARIABLES AND CONSTANTS                                  *
 *--------------------------------------------------------------------*/
@@ -36,7 +37,7 @@ OS_SEM LcdDebugUpdateSem;
 /*-------------------------------------------------------------------*
 *    FUNCTION PROTOTYPES                                             *
 *--------------------------------------------------------------------*/
-
+void UINT_TO_STRING(CPU_INT16U uInteger);
 /*********************************************************************
 *    MAIN TASK                                                       *
 **********************************************************************/
@@ -54,12 +55,17 @@ OS_SEM LcdDebugUpdateSem;
 void LcdTask(void *p_arg) {
     OS_ERR err;
 
-    CPU_INT08U ii = 0;
+    // CPU_INT08U ii = 0;
+    CPU_INT16U ii = 0;
     HAL_Delay(1500);
     BSP_LCD_Clear(LCD_COLOR_WHITE);
     while (DEF_TRUE) {
         if (ii % 2 == 0) {
-            BSP_LCD_DisplayChar(0, 0, '.');
+            // BSP_LCD_DisplayChar(0, 0, '.');
+            timer_val = __HAL_TIM_GET_COUNTER(&htim1);
+
+            UINT_TO_STRING(timer_val);
+            
 
         }
         else {
@@ -128,7 +134,24 @@ void LcdDebugTask(void *p_arg) {
  * @return 
  */
 /*********************************************************************/
-
+void UINT_TO_STRING(CPU_INT16U uInteger) {
+    CPU_INT08U* pBuffer;
+    CPU_INT08U intBuffer [6];
+    CPU_INT08U ii = 0;
+    pBuffer = &intBuffer[5];
+    *pBuffer = 0;
+    do {
+        *--pBuffer = (uInteger % 10) + '0';
+    } while( uInteger /= 10 );
+    while ( *pBuffer ) {
+        intBuffer[ii] = *pBuffer;
+        *pBuffer++;
+        ii++;
+    }
+    intBuffer[ii] = '\0';
+    BSP_LCD_DisplayStringAtLine(4, &intBuffer[0]);
+    BSP_LED_Toggle(LED4);
+}
 void LCD_Init(void) {
     CPU_INT08U err = 0;
     BSP_LCD_Init();

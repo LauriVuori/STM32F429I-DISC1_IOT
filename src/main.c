@@ -16,6 +16,7 @@
 #include "gpio.h"
 #include "usart1.h"
 #include "uart5.h"
+#include "timer.h"
 
 /**********************************************************************************************************
 *                                            LOCAL DEFINES
@@ -68,7 +69,7 @@ int main(void) {
                  (OS_TASK_PTR)AppTaskStart,
                  (void *)0,
                  (OS_PRIO)APP_TASK_START_PRIO,
-                 (CPU_STK *)&AppTaskStartStk[0],
+                 &AppTaskStartStk[0],
                  (CPU_STK_SIZE)APP_TASK_START_STK_SIZE / 10,
                  (CPU_STK_SIZE)APP_TASK_START_STK_SIZE,
                  (OS_MSG_QTY)5u,
@@ -93,7 +94,7 @@ static void AppTaskStart(void *p_arg) {
     
     MX_USART1_UART_Init();
     MX_USART5_UART_Init();
-
+    MX_TIM1_Init();
     MX_GPIO_Init();
     BSP_LED_Init(LED3);
     BSP_LED_Init(LED4);
